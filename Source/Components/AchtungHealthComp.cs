@@ -9,7 +9,11 @@ namespace AchtungMod.Components
     {
         public AchtungHealthCompProperties()
         {
+<<<<<<< HEAD
             compClass = typeof(AchtungHealthComp);
+=======
+            this.compClass = typeof(AchtungHealthComp);
+>>>>>>> dcbc746fc2ff73b0938ab79d41ae99e2f6c0f5aa
         }
     }
 
@@ -20,6 +24,7 @@ namespace AchtungMod.Components
 
         public override void CompTickRare()
         {
+<<<<<<< HEAD
             if (derefrenced) return;
 
             if (pawn == null) pawn = (Pawn) parent;
@@ -32,6 +37,15 @@ namespace AchtungMod.Components
 
             if (pawn.health.hediffSet.HasTendableInjury() && pawn.health.HasHediffsNeedingTendByPlayer() ||
                 pawn.needs.food.Starving || pawn.health.hediffSet.HasTemperatureInjury(TemperatureInjuryStage.Serious))
+=======
+            if (derefrenced) { return; }
+
+            if (pawn == null) { pawn = (Pawn)this.parent; }
+
+            if (!pawn.IsColonist || pawn.Dead) { derefrenced = true; return; }
+
+            if ((pawn.health.hediffSet.HasTendableInjury() && pawn.health.HasHediffsNeedingTendByPlayer()) || pawn.needs.food.Starving || pawn.health.hediffSet.HasTemperatureInjury(TemperatureInjuryStage.Serious))
+>>>>>>> dcbc746fc2ff73b0938ab79d41ae99e2f6c0f5aa
                 RemoveForcedWork(pawn);
         }
 
@@ -50,4 +64,8 @@ namespace AchtungMod.Components
             }
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dcbc746fc2ff73b0938ab79d41ae99e2f6c0f5aa
