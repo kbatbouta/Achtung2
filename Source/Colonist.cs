@@ -5,57 +5,57 @@ using Verse.AI;
 
 namespace AchtungMod
 {
-	public class Colonist
-	{
-		public Pawn pawn;
-		public Vector3 designation;
-		public IntVec3 lastOrder;
-		public Vector3 startPosition;
-		public Vector3 offsetFromCenter;
-		public bool originalDraftStatus;
+    public class Colonist
+    {
+        public Pawn pawn;
+        public Vector3 designation;
+        public IntVec3 lastOrder;
+        public Vector3 startPosition;
+        public Vector3 offsetFromCenter;
+        public bool originalDraftStatus;
 
-		public Colonist(Pawn pawn)
-		{
-			this.pawn = pawn;
-			startPosition = pawn.DrawPos;
-			lastOrder = IntVec3.Invalid;
-			offsetFromCenter = Vector3.zero;
-			designation = Vector3.zero;
-			originalDraftStatus = Tools.GetDraftingStatus(pawn);
-		}
+        public Colonist(Pawn pawn)
+        {
+            this.pawn = pawn;
+            startPosition = pawn.DrawPos;
+            lastOrder = IntVec3.Invalid;
+            offsetFromCenter = Vector3.zero;
+            designation = Vector3.zero;
+            originalDraftStatus = Tools.GetDraftingStatus(pawn);
+        }
 
-		public IntVec3 UpdateOrderPos(Vector3 pos)
-		{
-			var cell = pos.ToIntVec3();
+        public IntVec3 UpdateOrderPos(Vector3 pos)
+        {
+            var cell = pos.ToIntVec3();
 
-			if (AchtungLoader.IsSameSpotInstalled)
-			{
-				if (cell.Standable(pawn.Map) && pawn.CanReach(cell, PathEndMode.OnCell, Danger.Deadly, false, TraverseMode.ByPawn))
-				{
-					designation = cell.ToVector3Shifted();
-					designation.y = Altitudes.AltitudeFor(AltitudeLayer.Pawn);
-					return cell;
-				}
-			}
+            if (AchtungLoader.IsSameSpotInstalled)
+                if (cell.Standable(pawn.Map) &&
+                    pawn.CanReach(cell, PathEndMode.OnCell, Danger.Deadly, false, TraverseMode.ByPawn))
+                {
+                    designation = cell.ToVector3Shifted();
+                    designation.y = Altitudes.AltitudeFor(AltitudeLayer.Pawn);
+                    return cell;
+                }
 
-			var bestCell = RCellFinder.BestOrderedGotoDestNear(cell, pawn);
-			if (bestCell.InBounds(pawn.Map))
-			{
-				designation = bestCell.ToVector3Shifted();
-				designation.y = Altitudes.AltitudeFor(AltitudeLayer.Pawn);
-				return bestCell;
-			}
-			return IntVec3.Invalid;
-		}
+            var bestCell = RCellFinder.BestOrderedGotoDestNear(cell, pawn);
+            if (bestCell.InBounds(pawn.Map))
+            {
+                designation = bestCell.ToVector3Shifted();
+                designation.y = Altitudes.AltitudeFor(AltitudeLayer.Pawn);
+                return bestCell;
+            }
 
-		public void OrderTo(Vector3 pos)
-		{
-			var bestCell = UpdateOrderPos(pos);
-			if (bestCell.IsValid && lastOrder.IsValid == false || lastOrder != bestCell)
-			{
-				lastOrder = bestCell;
-				Tools.OrderToSynced(pawn, bestCell.x, bestCell.z);
-			}
-		}
-	}
+            return IntVec3.Invalid;
+        }
+
+        public void OrderTo(Vector3 pos)
+        {
+            var bestCell = UpdateOrderPos(pos);
+            if (bestCell.IsValid && lastOrder.IsValid == false || lastOrder != bestCell)
+            {
+                lastOrder = bestCell;
+                Tools.OrderToSynced(pawn, bestCell.x, bestCell.z);
+            }
+        }
+    }
 }
